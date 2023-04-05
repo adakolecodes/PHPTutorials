@@ -7,6 +7,13 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <?php
+        if(is_numeric(120.2)){
+            echo "true";
+            echo round(120.73434);
+        } else {
+            echo "false";
+        }
+    ?>
 </body>
 </html>
