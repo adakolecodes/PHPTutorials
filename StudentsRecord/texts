@@ -1,0 +1,21 @@
+// $gender = $_POST['gender'];
+// $email = $_POST['email'];
+// $phone = $_POST['phone'];
+// $image = $_POST['image'];
+
+
+// $sql = "INSERT INTO students (name, gender, email, phone, image) VALUES (:name, :gender, :email, :phone, :image)";
+// $stmt = $pdo->prepare($sql);
+// $stmt->execute([
+//     "name" => $name,
+//     "gender" => $gender,
+//     "email" => $email,
+//     "phone" => $phone,
+//     "image" => $image
+// ]);
+
+
+tmp_name is the temporary name and directory of the uploaded file which is generated automatically by php, and stored on the temporary folder on the server.
+name is the original name of the file which is store on the local machine.
+
+https://stackoverflow.com/questions/37008227/what-is-the-difference-between-name-and-tmp-name

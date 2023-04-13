@@ -1,7 +1,7 @@
 <?php
 // We can pass data through urls and forms using the $_GET and $_POST superglobals.
 
-// echo $_GET['myname'];
+echo $_GET['myname'];
 // echo $_GET['myage'];
 
 
@@ -24,7 +24,7 @@ if(isset($_GET['enter'])){
     <title>GET</title>
 </head>
 <body>
-    <a href="get.php?name=James">CLICK TO SHOW NAME</a>
+    <a href="get.php?myname=James">CLICK TO SHOW NAME</a>
 
     <form action="get.php" method="GET">
         <input type="text" name="myname" placeholder="Enter your name">

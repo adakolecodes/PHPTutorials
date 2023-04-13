@@ -13,7 +13,9 @@
 
         //Get the current date and time in this format: April 4, 2023, 12:27 pm
         $all = date("F j, Y, g:i a");
-        $month = date("F");
+        $monthFull = date("F"); //September
+        $monthShort = date("M"); //Sep
+        $monthInNumber = date("m"); //04
         $dayA = date("j"); //4
         $dayB = date("d"); //04
         $dayC = date("D"); //Tue
@@ -25,7 +27,7 @@
         $timePeriod = date("a");
         $timeAll = date("g:i a");
 
-        $dateTimeArray = [$all, $month, $dayA, $dayB, $dayC, $dayD, $year, $time12Hour, $time24Hour, $timeMin, $timePeriod, $timeAll];
+        $dateTimeArray = [$all, $monthFull, $monthShort, $monthInNumber, $dayA, $dayB, $dayC, $dayD, $year, $time12Hour, $time24Hour, $timeMin, $timePeriod, $timeAll];
         
         foreach ($dateTimeArray as $dateTime) {
             echo $dateTime . "<br>";
