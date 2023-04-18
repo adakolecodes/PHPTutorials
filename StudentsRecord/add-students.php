@@ -10,16 +10,27 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute();
 $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-//Edit student details
+
+//EDIT STUDENTS DETAILS
+//Set variables to be first empty to prevent error when app starts. When edit button has been set then reassign values of the variables to that selected from db based on the id passed through the get method so that it can be updated.
+$update = false;
+$name = "";
+$gender = "";
+$email = "";
+$phone = "";
+
 if(isset($_GET['edit'])){
     $id = filter_input(INPUT_GET, 'edit', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     
+    $update = true;
+
     $sql = "SELECT * FROM students WHERE id = ?";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$id]);
     $student = $stmt->fetch(PDO::FETCH_ASSOC);
     $rowCount = $stmt->rowCount();
     
+    //If no record exists with the parsed id, redirect to add-students.php page else reasign selected values to the variables
     if(!$rowCount > 0){
         header("Location: add-students.php");
     }else{
@@ -30,7 +41,8 @@ if(isset($_GET['edit'])){
     }
 }
 
-//Delete student
+
+//DELETE STUDENTS
 if(isset($_GET['delete'])){
     $id = filter_input(INPUT_GET, 'delete', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     
@@ -83,26 +95,45 @@ if(isset($_GET['delete'])){
             <form action="process-add-students.php" method="POST" enctype="multipart/form-data">
                 <div class="row mt-3">
                     <div class="col-md-6">
-                        <input class="form-control" type="text" name="name" placeholder="Enter your name">
+                        <input class="form-control" type="text" name="name" placeholder="Enter your name" value="<?php echo $name; ?>">
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <select class="form-select" name="gender">
-                            <option selected disabled value="">Select Gender...</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
+                            <!-- If update is true, show gender of student as the first option, else show "Select Gender..." as first option -->
+                            <?php if($update == true){ ?>
+                                <option value="<?php echo $gender; ?>"><?php echo $gender; ?></option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            <?php }else{ ?>
+                                <option selected disabled value="">Select Gender...</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            <?php } ?>
                         </select>
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-6">
-                        <input class="form-control" type="email" name="email" placeholder="Enter your email">
+                        <!-- We dont want to be able to edit email hence it is unique, therefore we want to hide email input when updating. -->
+                        <!-- If update is true, hide email input else show email input -->
+                        <?php if($update == true){ ?>
+                            <input class="form-control" type="email" name="email" value="<?php echo $email; ?>" hidden>
+                        <?php }else{ ?>
+                            <input class="form-control" type="email" name="email" placeholder="Enter your email">
+                        <?php } ?>
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-6">
-                        <input class="form-control" type="text" name="phone" placeholder="Enter your phone number">
+                        <!-- We dont want to be able to edit phone hence it is unique, therefore we want to hide phone input when updating. -->
+                        <!-- If update is true, hide phone input else show phone input -->
+                        <?php if($update == true){ ?>
+                            <input class="form-control" type="text" name="phone" value="<?php echo $phone; ?>" hidden>
+                        <?php }else{ ?>
+                            <input class="form-control" type="text" name="phone" placeholder="Enter your phone number">
+                        <?php } ?>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -112,7 +143,13 @@ if(isset($_GET['delete'])){
                 </div>
                 <div class="row mt-5">
                     <div class="col-md-6 d-grid gap-2">
-                        <button class="btn btn-dark btn-sm shadow" type="submit" name="enter">Submit</button>
+                        <!-- If update is true, show update button else show add button -->
+                        <?php if($update == true){ ?>
+                            <button class="btn btn-warning btn-sm shadow" type="submit" name="update">Update</button>
+                            <a href="add-students.php" class="btn btn-danger btn-sm shadow"> Cancel</a>
+                        <?php }else{ ?>
+                            <button class="btn btn-dark btn-sm shadow" type="submit" name="add">Add</button>
+                        <?php } ?>
                     </div>
                 </div>
             </form>
