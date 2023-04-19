@@ -1,14 +1,19 @@
 <?php
 Session_Start();
 
-//Add your database-connect file
+//Link your database-connect file
 require 'database-connect.php';
 
-//Select students from database
+//Select students from database to display on page
+//Create our sql query statement
 $sql = "SELECT * FROM students";
+//Prepare our statement
 $stmt = $pdo->prepare($sql);
+//Execute our statement
 $stmt->execute();
+//Fetch all students from db and store in the $students variable
 $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
 
 //EDIT STUDENTS DETAILS
@@ -19,7 +24,9 @@ $gender = "";
 $email = "";
 $phone = "";
 
+//Set the a tag link for edit, so that code within the isset will only run when the edit link is clicked
 if(isset($_GET['edit'])){
+    //Get id from url and store it in the $id variable
     $id = filter_input(INPUT_GET, 'edit', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     
     $update = true;
@@ -28,9 +35,10 @@ if(isset($_GET['edit'])){
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$id]);
     $student = $stmt->fetch(PDO::FETCH_ASSOC);
+    //Get the row count of the executed statement and store in the $rowCount variable
     $rowCount = $stmt->rowCount();
     
-    //If no record exists with the parsed id, redirect to add-students.php page else reasign selected values to the variables
+    //If no record exists with the parsed id (meaning $rowCount will be 0), redirect to add-students.php page else reasign selected values to the variables
     if(!$rowCount > 0){
         header("Location: add-students.php");
     }else{
@@ -43,7 +51,9 @@ if(isset($_GET['edit'])){
 
 
 //DELETE STUDENTS
+//Set the a tag link for delete, so that code within the isset will only run when the delete link is clicked
 if(isset($_GET['delete'])){
+    //Get id from url and store it in the $id variable
     $id = filter_input(INPUT_GET, 'delete', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     
     $sql = "DELETE FROM students WHERE id = ?";
@@ -72,7 +82,7 @@ if(isset($_GET['delete'])){
         </div>
         <div class="mt-5">
             <div>
-                <!-- Display Success message -->
+                <!-- Display Success message stored in the $_SESSION['success'] -->
                 <h6 class="text-success">
                 <?php 
                     if(isset($_SESSION['success'])){
@@ -82,7 +92,7 @@ if(isset($_GET['delete'])){
                 ?>
                 </h6>
 
-                <!-- Display error message -->
+                <!-- Display error message stored in the $_SESSION['error'] -->
                 <h6 class="text-danger">
                 <?php 
                     if(isset($_SESSION['error'])){
@@ -92,6 +102,7 @@ if(isset($_GET['delete'])){
                 ?>
                 </h6>
             </div>
+            <!-- enctype="multipart/form-data" must be used whenever you are making use of files on your form -->
             <form action="process-add-students.php" method="POST" enctype="multipart/form-data">
                 <div class="row mt-3">
                     <div class="col-md-6">
@@ -175,14 +186,19 @@ if(isset($_GET['delete'])){
                     </tr>
                 </thead>
                 <tbody>
+                    <!-- Loop through the students record stored in the $students variable using foreach loop -->
                     <?php foreach($students as $student){ ?>
                         <tr>
                             <td><?php echo $student['name']; ?></td>
                             <td><?php echo $student['gender']; ?></td>
                             <td><?php echo $student['email']; ?></td>
                             <td><?php echo $student['phone']; ?></td>
+                            <!-- Specify the location of the image. Make image clickable by wrapping image in an a tag with an href that points to the image itself so when image is clicked it opens up the image -->
                             <td><a href="uploads/<?php echo $student['image']; ?>"><img src="uploads/<?php echo $student['image']; ?>" alt="" width="50" height="50" class="rounded-circle shadow"></a></td>
                             <td>
+                                <!-- edit and delete here can be seen as the names of the a tag/link, just like how our buttons have a name contained in the name attribute -->
+                                <!-- The add-students.php is the page we want to make use of the retrieved data (id). It can be any page -->
+                                <!-- We are parsing the data/value of id into the url so as to retrive it when the link is clicked for updating purpose -->
                                 <a href="add-students.php?edit=<?php echo $student['id']; ?>">Edit</a>
                                 <a href="add-students.php?delete=<?php echo $student['id']; ?>">Delete</a>
                             </td>
