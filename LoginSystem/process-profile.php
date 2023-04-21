@@ -1,10 +1,16 @@
 <?php
 if(isset($_POST['profile'])){
+    
+    //Start session so as to make use of session on this page
     session_start();
+
+    //Link your database-connect file
     require "db.php";
 
+    //Creat an array of allowed image extensions and store in the $allowed_ext variable
     $allowed_ext = ['png', 'jpg', 'jpeg', 'gif'];
 
+    //Get user inputs from form
     $user_id = filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $fullname = filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -42,18 +48,22 @@ if(isset($_POST['profile'])){
     }
 
 
+    //Validate for empty inputs
     if(empty($user_id) || empty($fullname) || empty($username) || empty($email) || empty($phone) || empty($gender)){
         $_SESSION['error'] = "All fields are required";
         header("Location: profile.php");
         exit();
     }
 
+    //Check if profile has been inserted before
     $sql = "SELECT * FROM profile WHERE user_id = $user_id";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    //If profile has been inserted into the profile table already then update the profile
     if($user){
+        //If $image_name variable is empty (that is if no image is selected) then update profile without image
         if(empty($image_name)){
             $sql = "UPDATE profile SET fullname = ?, username = ?, phone = ?, gender = ? WHERE user_id = ?";
             $stmt = $pdo->prepare($sql);
@@ -66,6 +76,7 @@ if(isset($_POST['profile'])){
                 $_SESSION['error'] = "No changes made";
                 header("Location: profile.php");
             }
+        //If $image_name variable is not empty (that is if an image is selected) then update profile with image
         }else{
             //Validate image type/extension by checking if $image_ext exists in $allowed_ext array
             if(!in_array($image_ext, $allowed_ext)){
@@ -95,6 +106,7 @@ if(isset($_POST['profile'])){
                 header("Location: profile.php");
             }
         }
+    //If profile has not been inserted into the profile table then insert it
     }else{
         $sql = "INSERT INTO profile (user_id, fullname, username, email, phone, gender, image) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $pdo->prepare($sql);
@@ -110,7 +122,5 @@ if(isset($_POST['profile'])){
             header("Location: profile.php");
         }
     }
-
-    
 }
 ?>

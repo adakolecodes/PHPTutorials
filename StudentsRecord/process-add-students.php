@@ -3,7 +3,8 @@
 //If add or edit button is set/clicked then run all the codes within
 if(isset($_POST['add']) || isset($_POST['update'])){
 
-    Session_Start();
+    //Start session so as to make use of session on this page
+    session_start();
 
     //Link your database-connect file
     require 'database-connect.php';
