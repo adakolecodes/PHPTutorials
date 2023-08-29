@@ -84,7 +84,7 @@ if(isset($_POST['create']) || isset($_POST['update'])){
         //If result is true then show success message, else show error message
         if($result){
             $_SESSION['success'] = "Post created successfully";
-            header("Location: ../create-post.php");
+            header("Location: ../posts.php");
         }else{
             $_SESSION['error'] = "Something went wrong";
             header("Location: ../create-post.php");
@@ -121,7 +121,7 @@ if(isset($_POST['create']) || isset($_POST['update'])){
             //If result is true then show success message, else show error message
             if($result){
                 $_SESSION['success'] = "Post updated successfully";
-                header("Location: ../create-post.php");
+                header("Location: ../posts.php");
             }else{
                 $_SESSION['error'] = "Something went wrong";
                 header("Location: ../create-post.php");
@@ -139,7 +139,7 @@ if(isset($_POST['create']) || isset($_POST['update'])){
             //If result is true then show success message, else show error message
             if($result){
                 $_SESSION['success'] = "Post updated successfully";
-                header("Location: ../create-post.php");
+                header("Location: ../posts.php");
             }else{
                 $_SESSION['error'] = "Something went wrong";
                 header("Location: ../create-post.php");
