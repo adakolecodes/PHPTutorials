@@ -34,7 +34,7 @@ class Blog{
 
     //Get posts by id
     public function getPostById($id){
-        include "../config/db-connect.php";
+        include "config/db-connect.php";
         $sql = "SELECT * FROM blog_posts WHERE id = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$id]);
@@ -50,5 +50,36 @@ class Blog{
         $stmt->execute([$title]);
         $post = $stmt->fetch(PDO::FETCH_ASSOC);
         return $post;
+    }
+
+    public function updatePostWithImage($data){
+        //Inlcude db connection
+        include "../config/db-connect.php";
+
+        //Extract data from $data array
+        $id = $data['id'];
+        $title = $data['title'];
+        $body = $data['body'];
+        $featured_image = $data['featured_image'];
+
+        $sql = "UPDATE blog_posts SET title = ?, body = ?, featured_image = ? WHERE id = ?";
+        $stmt = $pdo->prepare($sql);
+        $result = $stmt->execute([$title, $body, $featured_image, $id]);
+        return $result;
+    }
+
+    public function updatePostWithoutImage($data){
+        //Inlcude db connection
+        include "../config/db-connect.php";
+
+        //Extract data from $data array
+        $id = $data['id'];
+        $title = $data['title'];
+        $body = $data['body'];
+
+        $sql = "UPDATE blog_posts SET title = ?, body = ? WHERE id = ?";
+        $stmt = $pdo->prepare($sql);
+        $result = $stmt->execute([$title, $body, $id]);
+        return $result;
     }
 }

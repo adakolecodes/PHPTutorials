@@ -1,8 +1,11 @@
 <?php 
 session_start();
-include_once 'classes/Blog.php';
-$blog = new Blog();
-$posts = $blog->getAllPosts();
+include_once 'config/db-connect.php';
+
+$sql = "SELECT * FROM posts_temporal ORDER BY id DESC";
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+$posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,11 +28,11 @@ $posts = $blog->getAllPosts();
             <?php foreach($posts as $post): ?>
             <div class="col">
                 <div class="card h-100 shadow-sm border-0">
-                    <img src="uploads/<?= $post['featured_image'] ?>" class="card-img-top" alt="<?= $post['title'] ?>">
+                    <img src="uploads/<?php echo $post['featured_image']; ?>" alt="" class="img-fluid">
                     <div class="card-body">
                         <h5 class="card-title"><?= $post['title'] ?></h5>
                         <p class="card-text col-10 text-truncate"><?= $post['body'] ?></p>
-                        <a href="post.php?id=<?= $post['id'] ?>" class="btn btn-secondary btn-sm">View</a>
+                        <a href="post2.php?id=<?= $post['id'] ?>" class="btn btn-secondary btn-sm">View</a>
                         <p style="font-size: 12px;" class="text-muted mt-3"><?php echo $post['created']; ?></p>
                     </div>
                 </div>

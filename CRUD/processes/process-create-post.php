@@ -17,6 +17,7 @@ if(isset($_POST['create']) || isset($_POST['update'])){
     $POST = filter_var_array($_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $title = $POST['title'];
     $body = $POST['body'];
+    $id = $POST['id'];
     //Get featured_image name and store in the $featured_image_name variable
     $featured_image_name = $_FILES['featured_image']['name'];
 
@@ -41,16 +42,16 @@ if(isset($_POST['create']) || isset($_POST['update'])){
     $featured_image_name = time().'.'.$featured_image_ext;
     $target_dir = "../uploads/{$featured_image_name}";
 
+    //Check if inputs are empty, if it exists then show error message, redirect to add-students.php and exit the script
+    if(empty($title) || empty($body)){
+        $_SESSION['error'] = "All fields are required";
+        header("Location: ../create-post.php");
+        exit();
+    }
+
     //Run only the code within this isset if create button is set/clicked
     //Create blog post
     if(isset($_POST['create'])){
-        //Check if inputs are empty, if it exists then show error message, redirect to add-students.php and exit the script
-        if(empty($title) || empty($body)){
-            $_SESSION['error'] = "All fields are required";
-            header("Location: ../create-post.php");
-            exit();
-        }
-
         //Check if post with same title already exists in database before inserting post
         $postExits = $blog->getPostByTitle($title);
         if($postExits){
@@ -91,5 +92,58 @@ if(isset($_POST['create']) || isset($_POST['update'])){
 
         //Move uploaded image from temporal directory to target directory
         move_uploaded_file($featured_image_tmp, $target_dir);
+    }
+
+
+    if(isset($_POST['update'])){
+        if(!empty($featured_image_ext)){
+            //Validate featured_image type/extension by checking if $featured_image_ext exists in $allowed_ext array
+            if(!in_array($featured_image_ext, $allowed_ext)){
+                $_SESSION['error'] = "Invalid file type";
+                header("Location: ../create-post.php");
+                exit();
+            }
+
+            //Validate file size by checking if $image_size is greater than 1MB
+            if($featured_image_size > 1000000){ // 1000000 bytes = 1MB
+                $_SESSION['error'] = "File too large";
+                header("Location: ../create-post.php");
+                exit();
+            }
+
+            $result = $blog->updatePostWithImage([
+                'id' => $id,
+                'title' => $title,
+                'body' => $body,
+                'featured_image' => $featured_image_name
+            ]);
+
+            //If result is true then show success message, else show error message
+            if($result){
+                $_SESSION['success'] = "Post updated successfully";
+                header("Location: ../create-post.php");
+            }else{
+                $_SESSION['error'] = "Something went wrong";
+                header("Location: ../create-post.php");
+            }
+
+            //Move uploaded image from temporal directory to target directory
+            move_uploaded_file($featured_image_tmp, $target_dir);
+        }else{
+            $result = $blog->updatePostWithoutImage([
+                'id' => $id,
+                'title' => $title,
+                'body' => $body
+            ]);
+
+            //If result is true then show success message, else show error message
+            if($result){
+                $_SESSION['success'] = "Post updated successfully";
+                header("Location: ../create-post.php");
+            }else{
+                $_SESSION['error'] = "Something went wrong";
+                header("Location: ../create-post.php");
+            }
+        }
     }
 }

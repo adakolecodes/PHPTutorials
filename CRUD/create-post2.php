@@ -1,14 +1,14 @@
 <?php
 session_start();
-include_once 'classes/Blog.php';
-$blog = new Blog();
-
-$update = false;
+include_once 'config/db-connect.php';
 
 if(isset($_GET['id'])){
-    $update = true;
     $id = $_GET['id'];
-    $post = $blog->getPostById($id);
+
+    $sql = "SELECT * FROM posts_temporal WHERE id = $id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$id]);
+    $post = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 ?>
 <!DOCTYPE html>
@@ -26,38 +26,50 @@ if(isset($_GET['id'])){
     <!-- Feedback message -->
     <?php include_once 'components/feedback-message.php'; ?>
 
+    <?php
+        //Display success message if success session is set
+        if(isset($_SESSION['success'])){
+            echo $_SESSION['success'];
+            unset($_SESSION['success']);
+        }
+        //Display error message if error session is set
+        if(isset($_SESSION['error'])){
+            echo $_SESSION['error'];
+            unset($_SESSION['error']);
+        }
+    ?>
     <div class="container mt-5 mb-5">
         <div>
             <h1>Create Post</h1>
         </div>
         <div class="mt-5">
-            <form action="processes/process-create-post.php" method="post" enctype="multipart/form-data">
-                <input type="text" name="id" hidden value="<?php echo !empty($post['id']) ? $post['id'] : ''; ?>">
+            <form action="processes/process-create-post2.php" method="post" enctype="multipart/form-data">
+                <input type="text" name="id" value="<?php if(!empty($post['id'])){ echo $post['id'];}; ?>" hidden>
                 <div class="row">
                     <div class="col-md-6">
                         <label for="title">Title*</label>
-                        <input type="text" name="title" id="title" placeholder="Title" class="form-control shadow-sm" value="<?php if(!empty($post['title'])){ echo $post['title']; }; ?>" required>
+                        <input type="text" name="title" id="title" placeholder="Title" class="form-control shadow-sm" value="<?php if(!empty($post['title'])){ echo $post['title'];}; ?>" required>
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <label for="body">Body*</label>
-                        <textarea name="body" id="body" rows="5" placeholder="Body" class="form-control shadow-sm" required><?php if(!empty($post['body'])){ echo $post['body']; }; ?></textarea>
+                        <textarea name="body" id="body" rows="5" placeholder="Body" class="form-control shadow-sm" required><?php if(!empty($post['body'])){ echo $post['body'];}; ?></textarea>
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-6">
-                        <label for="featured_image">Featured Image*</label>
-                        <input type="file" name="featured_image" id="featured_image" class="form-control shadow-sm">
+                        <label for="title">Image*</label>
+                        <input type="file" name="featured_image" id="featured_image" class="form-control shadow-sm" required>
                     </div>
                 </div>
                 <div class="row mt-5">
                     <div class="col-md-6">
-                        <?php if($update == true){?>
+                        <?php if(isset($_GET['id'])){ ?>
                             <button type="submit" name="update" class="btn btn-secondary">Update Post</button>
-                        <?php } else { ?>
+                        <?php } else {?>
                             <button type="submit" name="create" class="btn btn-secondary">Create Post</button>
-                        <?php } ?>
+                        <?php }?>
                     </div>
                 </div>
             </form>
