@@ -68,14 +68,9 @@ class Blog{
         return $result;
     }
 
-    public function updatePostWithoutImage($data){
+    public function updatePostWithoutImage($title, $body, $id){
         //Inlcude db connection
         include "../config/db-connect.php";
-
-        //Extract data from $data array
-        $id = $data['id'];
-        $title = $data['title'];
-        $body = $data['body'];
 
         $sql = "UPDATE blog_posts SET title = ?, body = ? WHERE id = ?";
         $stmt = $pdo->prepare($sql);

@@ -130,11 +130,7 @@ if(isset($_POST['create']) || isset($_POST['update'])){
             //Move uploaded image from temporal directory to target directory
             move_uploaded_file($featured_image_tmp, $target_dir);
         }else{
-            $result = $blog->updatePostWithoutImage([
-                'id' => $id,
-                'title' => $title,
-                'body' => $body
-            ]);
+            $result = $blog->updatePostWithoutImage($title, $body, $id);
 
             //If result is true then show success message, else show error message
             if($result){

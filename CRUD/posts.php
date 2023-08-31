@@ -14,7 +14,10 @@ $posts = $blog->getAllPosts();
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+    <!-- Add navbar -->
     <?php include_once 'components/navbar.php'; ?>
+    <!-- Feedback message -->
+    <?php include_once 'components/feedback-message.php'; ?>
     <div class="container mt-5 mb-5">
         <div class="mb-5">
             <h1>Posts</h1>
