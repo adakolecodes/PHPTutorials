@@ -41,7 +41,7 @@ $withdrawals = $account->getAllWithdrawalsByUserId($userId);
         <div class="mb-5">
             <div class="card">
                 <div class="card-body p-5">
-                    <h6 class="card-subtitle mb-2 text-body-secondary">Account Balance</h6>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">Account Balance</h6> 
                     <h1 class="card-title mb-5">N<?php echo number_format($accountBalance['balance'], 2); ?></h1>
                     <button type="button" class="btn btn-dark shadow-sm" data-bs-toggle="modal" data-bs-target="#fundWalletModal"><i class="bi bi-plus-circle-fill"></i> Fund Wallet</button>
                     <button type="button" class="btn btn-warning shadow-sm" data-bs-toggle="modal" data-bs-target="#withdrawModal"><i class="bi bi-plus-circle-fill"></i> Withdraw</button>
