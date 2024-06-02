@@ -5,7 +5,8 @@ if(isset($_POST['submit'])){
 
     include_once "../config/db-connect.php";
 
-    $POST = $POST = filter_var_array($_POST, FILTER_UNSAFE_RAW);
+    $POST = filter_var_array($_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);//Sanitize POST array
+
     $firstName = $POST['firstName'];
     $lastName = $POST['lastName'];
     $gender = $POST['gender'];
