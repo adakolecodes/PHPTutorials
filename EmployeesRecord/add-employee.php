@@ -11,7 +11,9 @@ session_start();
 </head>
 <body>
     <div class="container mt-5 mb-5">
+        <a href="employees.php" class="btn btn-link">View Employees</a>
         <h1 class="mb-5">Add Employee</h1>
+
         <?php
             if(isset($_SESSION['error'])){
                 echo '<div class="alert alert-danger" role="alert">'.$_SESSION['error'].'</div>';
@@ -23,6 +25,7 @@ session_start();
                 unset($_SESSION['success']);
             }
         ?>
+
         <form action="processes/add-employee-process.php" method="post">
             <div class="row mb-3">
                 <div class="col-md-6">
