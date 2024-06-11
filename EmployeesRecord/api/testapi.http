@@ -1,0 +1,16 @@
+GET http://localhost/PhpTutorials/EmployeesRecord/api/employees.php
+
+###
+
+POST http://localhost/PhpTutorials/EmployeesRecord/api/add-employees.php
+content-type: application/json
+
+{
+    "firstName": "Obed",
+    "lastName": "Kumi",
+    "gender": "Male",
+    "age": 70,
+    "occupation": "Gardener",
+    "income": 850,
+    "married": 1
+}
